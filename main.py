@@ -69,11 +69,25 @@ def principal_for_token(token):
 
 def auth_principal(authorization: Optional[str]) -> str:
     if not authorization or not authorization.startswith("Bearer "):
-        raise HTTPException(status_code=401, detail="Bearer authorization required")
+        raise HTTPException(
+            status_code=401,
+            detail="Bearer authorization required"
+        )
+
     token = authorization[len("Bearer "):].strip()
+
     if not token or len(token) < 8:
-        raise HTTPException(status_code=401, detail="Invalid bearer token")
-    # Do not return or log the token. Isolation is based on the token itself.
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid bearer token"
+        )
+
+    if API_TOKEN and not secrets.compare_digest(token, API_TOKEN):
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid bearer token"
+        )
+
     return principal_for_token(token)
 
 
