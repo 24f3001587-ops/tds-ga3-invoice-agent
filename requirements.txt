@@ -1,4 +1,5 @@
 fastapi
-uvicorn[standard]
-httpx
-psycopg[binary]
+uvicorn
+cryptography
+pydantic
+requests
